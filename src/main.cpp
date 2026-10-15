@@ -2,6 +2,10 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "cli/command.h"
 #include "cli/console.h"
 #include "data/library.h"
@@ -59,6 +63,13 @@ void showCatalog(const LibraryService& service) {
 } // namespace
 
 int main() {
+#ifdef _WIN32
+    // Sem isto, o console do Windows decodifica os bytes UTF-8 do código-fonte
+    // com a code page antiga (850/437) e os acentos saem como lixo.
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+
     Library library;
     LibraryService service(library);
 
